@@ -16,8 +16,8 @@ provider:
   memorySize: ${file(${self:custom.PATH}):memorySize, 128}
   timeout: ${file(${self:custom.PATH}):timeout}
   
-  stackName: ${self:custom.PROJECT}-stack-${self:provider.stage}
-  apiName: ${self:custom.PROJECT}-api-${self:provider.stage}
+  stackName: ${self:custom.PROJECT}-${self:provider.stage}-stack-${self:provider.stage}
+  apiName: ${self:custom.PROJECT}-api-${self:service}
 
   deploymentBucket:
     name: ${self:custom.PROJECT}-deployment-bucket
