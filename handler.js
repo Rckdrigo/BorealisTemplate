@@ -1,14 +1,58 @@
 'use strict';
 
-module.exports.hello = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }, null, 2),
-  };
+const config = require('./db.config.json')
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true,
+}
+
+const dbConfig = (context) => {
+    let c = null;
+    if(context.functionName.includes('-prod-'))
+        c = config.prod
+    else if(context.functionName.includes('-test-'))
+        c = config.test
+    else 
+        c = config.dev
+
+    return c
+}
+
+//npm run ms:offline UserManagment
+module.exports.hello = async (event, context) => {   
+
+    context.callbackWaitsForEmptyEventLoop = false;
+    const mysql = require('serverless-mysql')(
+        { 
+            config : dbConfig(context) 
+        })
+    
+    let select = 'SELECT NOW();';
+    let response = await mysql.query(select,[])
+
+
+    let reply = "HELLO WORLD!!!!";
+    if(context.awsRequestId.includes('offline'))
+    {
+        reply = "Hello world offline";
+    } 
+    else
+    {
+
+    }
+
+
+    return {
+        headers,
+        statusCode: 200,
+        reply,
+        event,
+        context,
+        response,   
+        
+    };
+
+    // Use this code if you don't use the http event with the LAMBDA-PROXY integration
+    // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
 };
