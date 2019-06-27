@@ -37,7 +37,9 @@ provider:
 
 functions:
   hello:
-    handler: handler.hello
+    handler: handler.hello  
+    # layers:
+    #   - {Ref: [ARN of LAYER] }
     events:
       # Please remove this
       - http:
@@ -58,7 +60,8 @@ functions:
 
           # authorizer:
           #   type: COGNITO_USER_POOLS # TOKEN or COGNITO_USER_POOLS, same as AWS Cloudformation documentation
-          #   authorizerId: r5j1jv
+          #   authorizerId: [AUTHORIZER ID]
+          
 
 plugins:
   - serverless-offline

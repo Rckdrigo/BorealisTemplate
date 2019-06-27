@@ -2,54 +2,38 @@
 
 const config = require('./db.config.json')
 
-const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Credentials': true,
-}
+// const headers = {
+//     'Access-Control-Allow-Origin': '*',
+//     'Access-Control-Allow-Credentials': true,
+// }
 
 const dbConfig = (context) => {
-    let c = null;
-    if(context.functionName.includes('-prod-'))
-        c = config.prod
-    else if(context.functionName.includes('-test-'))
-        c = config.test
-    else 
-        c = config.dev
+    if(context.awsRequestId.includes('offline'))
+        return config.offline
 
-    return c
+    if (context.functionName.includes('-prod-'))
+        return config.prod
+    else if (context.functionName.includes('-test-'))
+        return config.test
+    else 
+        return config.dev
 }
 
-//npm run ms:offline UserManagment
 module.exports.hello = async (event, context) => {   
 
     context.callbackWaitsForEmptyEventLoop = false;
-    const mysql = require('serverless-mysql')(
-        { 
-            config : dbConfig(context) 
-        })
+    // const mysql = require('serverless-mysql')(
+    //     { 
+    //         config : dbConfig(context) 
+    //     })
     
-    let select = 'SELECT NOW();';
-    let response = await mysql.query(select,[])
-
-
-    let reply = "HELLO WORLD!!!!";
-    if(context.awsRequestId.includes('offline'))
-    {
-        reply = "Hello world offline";
-    } 
-    else
-    {
-
-    }
-
+    // let select = 'SELECT NOW();';
+    // let response = await mysql.query(select,[])
 
     return {
-        headers,
+        // headers,
         statusCode: 200,
-        reply,
-        event,
-        context,
-        response,   
+        body: JSON.stringify({message: "Hello world!"})   
         
     };
 
