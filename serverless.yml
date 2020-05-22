@@ -6,7 +6,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
 
   stage: ${opt:stage, 'dev'}
   region: ${file(${self:custom.PATH}):region, 'ap-southeast-1'}
@@ -16,8 +16,8 @@ provider:
   memorySize: ${file(${self:custom.PATH}):memorySize, 128}
   timeout: ${file(${self:custom.PATH}):timeout}
   
-  stackName: ${self:custom.PROJECT}-${self:service}-stack-${self:provider.stage}
-  apiName: ${self:custom.PROJECT}-api-${self:provider.stage}
+  stackName: ${self:custom.PROJECT}-${self:service}-${self:provider.stage}
+  apiName: ${self:custom.PROJECT}-${self:service}-${self:provider.stage}
 
   deploymentBucket:
     name: ${self:custom.PROJECT}-deployment-bucket
